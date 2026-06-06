@@ -45,8 +45,8 @@ client.on('messageCreate', async (msg) => {
   const embed = new EmbedBuilder()
     .setTitle('📦 Stree Bot - Premium')
     .setDescription(
-      'Welcome! Please be patient while our admin reviews your order.\n\n' +
-      'Our team will get back to you as soon as possible. Thank you for your patience and support! 🙏'
+      '**Welcome! Please be patient while our admin reviews your order.**\n\n' +
+      '**Our team will get back to you as soon as possible. Thank you for your patience and support! 🙏**'
     )
     .setColor(0x39FF14)
     .setFooter({ text: 'Stree Bot • Premium Order System' })
@@ -126,7 +126,7 @@ client.on('interactionCreate', async (interaction) => {
 
     const staffRow = new ActionRowBuilder().addComponents(
       new ButtonBuilder().setCustomId(`terima_${channel.id}`).setLabel('✅ Accept').setStyle(ButtonStyle.Success),
-      new ButtonBuilder().setCustomId(`proses_${channel.id}`).setLabel('🔄 Processing').setStyle(ButtonStyle.Primary),
+      new ButtonBuilder().setCustomId(`proses_${channel.id}`).setLabel('⏳ Processing').setStyle(ButtonStyle.Primary),
       new ButtonBuilder().setCustomId(`tolak_${channel.id}`).setLabel('❌ Decline').setStyle(ButtonStyle.Danger),
     );
 
