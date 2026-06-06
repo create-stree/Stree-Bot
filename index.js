@@ -15,6 +15,9 @@ const client = new Client({
   partials: [Partials.Channel]
 });
 
+const ADMIN_ROLE_ID  = '1453337422292193311';
+const LOG_CHANNEL_ID = '1454791410627907747';
+
 const tickets = new Map();
 let ticketCount = 0;
 
@@ -26,7 +29,6 @@ client.once('ready', () => {
   });
 });
 
-// ── Command: !setup-ticket ──
 client.on('messageCreate', async (msg) => {
   if (msg.content !== '!setup-ticket') return;
   if (!msg.member.permissions.has(PermissionsBitField.Flags.Administrator)) return;
@@ -49,10 +51,8 @@ client.on('messageCreate', async (msg) => {
   await msg.delete().catch(() => {});
 });
 
-// ── Interaksi ──
 client.on('interactionCreate', async (interaction) => {
 
-  // 1. Tombol "Buat Order" → tampilkan modal
   if (interaction.isButton() && interaction.customId === 'buat_order') {
     const modal = new ModalBuilder()
       .setCustomId('form_order')
@@ -88,7 +88,6 @@ client.on('interactionCreate', async (interaction) => {
     return interaction.showModal(modal);
   }
 
-  // 2. Form disubmit → buat channel ticket
   if (interaction.isModalSubmit() && interaction.customId === 'form_order') {
     await interaction.deferReply({ ephemeral: true });
 
@@ -104,9 +103,9 @@ client.on('interactionCreate', async (interaction) => {
       name: `order-${ticketId}`,
       type: ChannelType.GuildText,
       permissionOverwrites: [
-        { id: guild.roles.everyone,          deny: [PermissionsBitField.Flags.ViewChannel] },
-        { id: user.id,                        allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages] },
-        { id: process.env.ADMIN_ROLE_ID,      allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages] },
+        { id: guild.roles.everyone, deny: [PermissionsBitField.Flags.ViewChannel] },
+        { id: user.id,              allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages] },
+        { id: ADMIN_ROLE_ID,        allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages] },
       ]
     });
 
@@ -132,7 +131,7 @@ client.on('interactionCreate', async (interaction) => {
     );
 
     await channel.send({
-      content: `<@&${process.env.ADMIN_ROLE_ID}> Ada order baru masuk!`,
+      content: `<@&${ADMIN_ROLE_ID}> Ada order baru masuk!`,
       embeds: [embed],
       components: [adminRow]
     });
@@ -143,7 +142,6 @@ client.on('interactionCreate', async (interaction) => {
     return;
   }
 
-  // 3. Admin klik tombol aksi
   if (interaction.isButton()) {
     const parts     = interaction.customId.split('_');
     const aksi      = parts[0];
@@ -167,15 +165,13 @@ client.on('interactionCreate', async (interaction) => {
       content: `${info.emoji} Status order **#${ticket.ticketId}** diubah ke **${info.label}** oleh <@${interaction.user.id}>`,
     });
 
-    // DM ke user
     const userObj = await client.users.fetch(ticket.userId);
     await userObj.send(
       `📬 **Stree Bot** — Update order kamu!\n` +
       `Order **#${ticket.ticketId}** (${ticket.namaProduk}) sekarang: **${info.label}**`
     ).catch(() => {});
 
-    // Log ke channel admin
-    const logChannel = interaction.guild.channels.cache.get(process.env.LOG_CHANNEL_ID);
+    const logChannel = interaction.guild.channels.cache.get(LOG_CHANNEL_ID);
     if (logChannel) {
       await logChannel.send({
         embeds: [new EmbedBuilder()
@@ -192,7 +188,6 @@ client.on('interactionCreate', async (interaction) => {
       });
     }
 
-    // Auto hapus channel jika ditolak
     if (aksi === 'tolak') {
       await interaction.channel.send('⚠️ Channel ini akan dihapus dalam 10 detik...');
       setTimeout(() => interaction.channel.delete().catch(() => {}), 10_000);
