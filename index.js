@@ -15,10 +15,10 @@ const client = new Client({
   partials: [Partials.Channel]
 });
 
-const ADMIN_ROLE_ID   = '1453337422292193311';
+const ADMIN_ROLE_ID   = '1452998957281316945';
 const LOG_CHANNEL_ID  = '1454791410627907747';
-const STAFF_ROLE_ID   = '1453337422292193311';
-const TICKET_CATEGORY = 'Ticket';
+const STAFF_ROLE_ID   = '1452998957281316945';
+const TICKET_CATEGORY = '╭─𒌋𒀖 TICKETS';
 
 const tickets = new Map();
 let ticketCount = 0;
@@ -43,7 +43,7 @@ client.on('messageCreate', async (msg) => {
   );
 
   const embed = new EmbedBuilder()
-    .setTitle('🌟 Stree Bot — Premium')
+    .setTitle('📦 Stree Bot - Premium')
     .setDescription(
       'Welcome! Please be patient while our admin reviews your order.\n\n' +
       'Our team will get back to you as soon as possible. Thank you for your patience and support! 🙏'
@@ -114,14 +114,14 @@ client.on('interactionCreate', async (interaction) => {
       .setTitle(`🎫 Premium Order #${ticketId}`)
       .setColor(0x39FF14)
       .setDescription(
-        'Thank you for your purchase! Please be patient while our team processes your order.\n\n' +
-        '*Our admin will respond as soon as possible. We appreciate your patience!* 🙏'
+        '**Thank you for your purchase! Please be patient while our team processes your order.** \n\n' +
+        '***Our admin will respond as soon as possible. We appreciate your patience!* 🙏**'
       )
       .addFields(
         { name: '👤 User',  value: `<@${user.id}>` },
         { name: '📝 Notes', value: catatan },
       )
-      .setFooter({ text: 'Stree Bot • Premium Order System' })
+      .setFooter({ text: 'Stree Bot • Order Premium' })
       .setTimestamp();
 
     const staffRow = new ActionRowBuilder().addComponents(
